@@ -16,6 +16,7 @@ For this project Spar Nord needs there warehouse to be designed in provided targ
 4. Card type dimension - This dimension has the information about the particular card type with which a particular transaction took place. This can help in performing analysis on how the number of transactions varies with respect to each different card type.
 5. Transaction fact - This is the actual fact table for the data set which contains all of the numerical data such as the currency of the transaction, service, transaction amount, message code and text as well as weather info such as description, weather id etc.
 ## SCHEMA FOR ATM_DATA TARGET DIMENSIONAL MODEL:
+
 1 .DIM_LOCATION Column Name Data Type location_id INT location VARCHAR(50) streetname VARCHAR(255) street_number INT zipcode INT lat DECIMAL(10,3) lon DECIMAL(10,3) PRIMARY KEY location_id
 
 2. DIM_ATM Column Name Data Type Comments/Foreign Key atm_id INT atm_number VARCHAR(20) atm_manufacturer VARCHAR(50) atm_location_id INT PRIMARY KEY atm_id FOREIGN KEY atm_location_id REFERENCES DIM_LOCATION (location_id) 
