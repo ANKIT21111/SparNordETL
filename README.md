@@ -17,12 +17,8 @@ For this project Spar Nord needs there warehouse to be designed in provided targ
 5. Transaction fact - This is the actual fact table for the data set which contains all of the numerical data such as the currency of the transaction, service, transaction amount, message code and text as well as weather info such as description, weather id etc.
 ## SCHEMA FOR ATM_DATA TARGET DIMENSIONAL MODEL:
 
-1 .DIM_LOCATION Column Name Data Type location_id INT location VARCHAR(50) streetname VARCHAR(255) street_number INT zipcode INT lat DECIMAL(10,3) lon DECIMAL(10,3) PRIMARY KEY location_id
-
+1. DIM_LOCATION Column Name Data Type location_id INT location VARCHAR(50) streetname VARCHAR(255) street_number INT zipcode INT lat DECIMAL(10,3) lon DECIMAL(10,3) PRIMARY KEY location_id
 2. DIM_ATM Column Name Data Type Comments/Foreign Key atm_id INT atm_number VARCHAR(20) atm_manufacturer VARCHAR(50) atm_location_id INT PRIMARY KEY atm_id FOREIGN KEY atm_location_id REFERENCES DIM_LOCATION (location_id) 
-
 3. DIM_DATE Column Name Data Type date_id INT full_date_time TIMESTAMP year INT month VARCHAR(20) day INT hour INT weekday VARCHAR(20) PRIMARY KEY date_id 
-
 4. DIM_CARD_TYPE Column Name Data Type card_type_id INT card_type VARCHAR(30) PRIMARY KEY card_type_id 
-
 5. FACT_ATM_TRANS Column Name Data Type Comments/Foreign Key trans_id BIGINT atm_id INT weather_loc_id INT date_id INT card_type_id INT atm_status VARCHAR(20) currency VARCHAR(10) service VARCHAR(20) transaction_amount INT message_code VARCHAR(255) message_text VARCHAR(255) rain_3h DECIMAL(10,3) clouds_all INT weather_id INT weather_main VARCHAR(50) weather_description VARCHAR(255) PRIMARY KEY trans_id FOREIGN KEY weather_loc_id REFERENCES DIM_LOCATION (location_id) atm_id REFERENCES DIM_ATM (atm_id) date_id REFERENCES DIM_DATE (date_id) card_type_id REFERENCES DIM_CARD_TYPE (card_type_id)
